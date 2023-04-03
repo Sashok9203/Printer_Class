@@ -77,7 +77,7 @@
                 printers[2]?.Print(new Document { Name = " Text9.txt", pages = 4 });
 
                 Console.WriteLine(" All documents in queues...\n");
-
+               
             }
             catch (Exception e) { Console.WriteLine(e.Message); }
         }

@@ -43,7 +43,7 @@ namespace Comp_Class
 
     internal partial class Printer
     {
-        private Thread thread;
+        private Thread? thread = null;
         private static uint _totalDocsPrinted;
         private const string _manufacturer = "Canon";
         private Cartridge?[] _cartridges;
@@ -52,12 +52,12 @@ namespace Comp_Class
         {
             Random rnd = new Random();
             while (_doc_queue.Count > 0)
-             {
+            {
                 Document doc = _doc_queue.Dequeue();
                 uint count = 1;
                 while (doc.pages >= count)
                 {
-                    for(int i = 0;i<_cartridges.Length;i++)
+                    for (int i = 0; i < _cartridges.Length; i++)
                     {
                         if (!(_cartridges[i]?.CurentLevel > 0))
                         {
@@ -69,10 +69,11 @@ namespace Comp_Class
                         _cartridges[i] = car;
                     }
                     Console.WriteLine($" \"{Name}\" printing \"{doc.Name}\" page {doc.pages}/{count}\n");
-                    Thread.Sleep(rnd.Next(500,1500));
+                    Thread.Sleep(rnd.Next(500, 1500));
                     ++count;
                 }
-             }
+            }
+            
         }
 
         public uint ColorsCount { get; init; }
@@ -95,7 +96,6 @@ namespace Comp_Class
             _cartridges = new Cartridge?[ColorsCount];
             _doc_queue = new Queue<Document>();
             Guid = Guid.NewGuid();
-            thread = new(new ThreadStart(print));
         }
         
         static Printer() { _totalDocsPrinted = 0; }
@@ -131,11 +131,17 @@ namespace Comp_Class
 
         public void Print(in Document doc)
         {
+            
             if (OnOff && Ready)
             {
                 _doc_queue.Enqueue(doc);
-                if (thread.IsAlive) return;
-                else  thread.Start();
+                if (thread != null && thread.IsAlive) return;
+                else
+                {
+                    thread = new(new ThreadStart(print));
+                    thread.Start();
+                   
+                }
             }
         }
 
