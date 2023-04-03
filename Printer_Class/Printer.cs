@@ -50,10 +50,9 @@ namespace Comp_Class
         private Queue<Document> _doc_queue;
         private  void print()
         {
-            
-             while (_doc_queue.Count > 0)
+            Random rnd = new Random();
+            while (_doc_queue.Count > 0)
              {
-                Random rnd = new Random();  
                 Document doc = _doc_queue.Dequeue();
                 uint count = 1;
                 while (doc.pages >= count)
